@@ -1,13 +1,11 @@
 Package: MDBillTrackR
-Title: An Amazing Shiny App
+Title: A Shiny Dashboard to Track Maryland Legislature Bills
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "firstname",
-           family = "lastname",
-           role = c("aut", "cre"),
-           email = "your@email.com")
-Description: What the package does (one paragraph).
-License: What license is it under?
+Authors@R: person('Joseph', 'Edgerton', email = 'jedgerton@umces.edu', role = c('cre', 'aut'))
+Description: This dashboard will update each hour to add new Maryland legislature bills to its internal SQlite database.
+  For each hour, the incoming bills can be filtered by keywords to reduce manual searching. Filtered bills can be tracked and
+  then updated with current information. Other analytics, such as legislative session progress, will be displayed as well.
+License: MIT + file LICENSE
 Imports: 
     config (>= 0.3.1),
     golem (>= 0.3.1),
@@ -15,5 +13,5 @@ Imports:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-URL: https://github.com/Joseph-Edgerton/MDBillTrackR
-BugReports: https://github.com/Joseph-Edgerton/MDBillTrackR/issues
+URL: https://github.com/Joseph-Edgerton/MDBillTrackR/tree/main
+BugReports: https://github.com/Joseph-Edgerton/MDBillTrackR/tree/main/issues

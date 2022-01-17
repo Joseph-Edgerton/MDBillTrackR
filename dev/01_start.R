@@ -27,7 +27,7 @@ golem::fill_desc(
   author_first_name = "Joseph", # Your First Name
   author_last_name = "Edgerton", # Your Last Name
   author_email = "jedgerton@umces.edu", # Your Email
-  repo_url = NULL # The URL of the GitHub Repo (optional) 
+  repo_url = "https://github.com/Joseph-Edgerton/MDBillTrackR/tree/main" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ----
@@ -37,7 +37,7 @@ golem::set_golem_options()
 ## See ?usethis for more information
 usethis::use_mit_license( "Golem User" )  # You can set another license here
 usethis::use_readme_rmd( open = FALSE )
-usethis::use_code_of_conduct()
+usethis::use_code_of_conduct(contact = "jedgerton@umces.edu")
 usethis::use_lifecycle_badge( "Experimental" )
 usethis::use_news_md( open = FALSE )
 
