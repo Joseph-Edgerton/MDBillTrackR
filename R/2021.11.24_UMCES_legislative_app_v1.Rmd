@@ -1,0 +1,176 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+#SETUP
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r download packages}
+
+my_packages <- c("tidyverse", "here", "rvest")
+
+install.packages(my_packages, repos = "https://cran.r-project.org")
+```
+
+```{r load packages}
+library(tidyverse)
+library(here)
+library(rvest)
+library(jsonlite)
+library(tidytext)
+```
+
+#EXAMINE DATA
+
+```{r raw data}
+
+raw_data <- fromJSON(txt = "https://mgaleg.maryland.gov/2022rs/misc/billsmasterlist/legislation.json")
+
+```
+
+
+```{r view data}
+
+glimpse(raw_data)
+#lot of empty rows, will need to define NA's as both NA and empty
+
+
+head(raw_data, n = 50L)
+#Hmmm, I wonder why some don't have a synopsis?
+
+unique(raw_data$Synopsis)
+
+```
+
+```{r clean data}
+
+clean_data <- raw_data %>% 
+  select(BillNumber, Synopsis, Title, Status) %>% 
+  unnest_tokens(output = word, input = Synopsis) %>% 
+  anti_join(stop_words) %>% 
+  mutate(word = map(.x = word, .f = ~str_remove(., "\\d+"))) %>% 
+  mutate(word = unlist(word))
+  
+
+
+
+#Some sort of lexicon combination (not sure how to split up words/terms yet)
+#these seem to be a couple of good starting places for terms to keep track of
+#https://www.epa.gov/report-environment/roe-glossary
+#https://legacy.azdeq.gov/function/help/glossary.html
+
+clean_data
+
+```
+```{r lexicon check}
+
+envt_terms <- tibble(filter_word = c(
+  "management",
+  "environment",
+  "greenshouse",
+  "construction",
+  "water",
+  "watershed",
+  "river",
+  "ocean",
+  "trash",
+  "garbage",
+  "energy",
+  "green",
+  "stewardship",
+  "development",
+  "oyster",
+  "fish",
+  "wildlife",
+  "game",
+  "aquaculture",
+  "emissions",
+  "science",
+  "plastic",
+  "marine",
+  "fresh water",
+  "esturary",
+  "marsh",
+  "species",
+  "endangered",
+  "protected",
+  "climate change",
+  "seafood",
+  "hunting",
+  "air",
+  "storm",
+  "stormwater",
+  "overflow",
+  "greenspaces",
+  "PCBs",
+  "PFAS",
+  "parks",
+  "environmental justice",
+  "access",
+  "dumping",
+  "toxic",
+  "waste")
+)
+
+filtered_bills <- clean_data %>% 
+  filter(word %in% envt_terms$filter_word) %>% 
+  dplyr::distinct(BillNumber)
+
+filtered_bills
+
+```
+
+```{r database}
+
+check_new_bills <- function(filtered_bills){
+  
+  new_bills <- anti_join(filtered_bills, current_bills, by = "Bill Number")
+  
+  return(new_bills)
+}
+  #should have an output or separate function for just highlighting new bills
+  #should highlight/flag new bills in a table window and have a checkbox to either save or discard the bill into the db
+  
+
+#reactive(if pressed button, then use this function with those that were selected)
+add_new_bills <- function(new_bills){
+  
+  current_bills <- bind_rows(new_bills, current_bills)
+  
+  #this should connect to the SQL db and return whatever path/object to update it
+  return(current_bills)
+}
+  
+
+
+```
+
+```{r SQLite}
+# install.packages("RSQLite")
+library(DBI)
+library(nycflights13)
+# con <- dbConnect(RSQLite::SQLite(), ":memory:")
+db_con <- dbConnect(RSQLite::SQLite(), dbname = here("data","bills.db"))
+
+dbListTables(db_con)
+
+
+#no, this puts it in memory, we don't want that
+# db_bill <- dbReadTable(conn = db_con, name = "pvi")
+
+db_bill <- tbl(db_con, "pvi")
+
+current_bills <- db_bill %>% 
+  select(`Bill Number`, `Synopsis`, `Title`) 
+  
+current_bills
+
+dbDisconnect(db_con)
+
+```
+
+
