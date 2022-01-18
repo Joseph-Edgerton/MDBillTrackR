@@ -6,5 +6,8 @@
 #' @noRd
 app_server <- function( input, output, session ) {
   # Your application server logic 
+  #db_con <- dbConnect(RSQLite::SQLite(), dbname = here("R","bills.db"))
+  
+  
   
 }

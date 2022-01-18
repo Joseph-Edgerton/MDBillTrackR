@@ -151,6 +151,7 @@ add_new_bills <- function(new_bills){
 
 ```{r SQLite}
 # install.packages("RSQLite")
+library(RSQLite)
 library(DBI)
 library(nycflights13)
 # con <- dbConnect(RSQLite::SQLite(), ":memory:")

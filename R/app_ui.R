@@ -10,8 +10,24 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic 
     fluidPage(
-      h1("MDBillTrackR")
-    )
+      h1("MDBillTrackR"),
+      fluidRow(
+          column(4,
+             "A"
+          ),
+          column(8,
+            "B"
+          )
+    ),
+      fluidRow(
+          column(4,
+                 "C"
+          ),
+          column(8,
+                 "D"
+          )
+        )
+      )
   )
 }
 
