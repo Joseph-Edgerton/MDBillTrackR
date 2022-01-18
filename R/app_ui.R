@@ -13,7 +13,7 @@ app_ui <- function(request) {
       h1("MDBillTrackR"),
       fluidRow(
           column(4,
-             "A"
+             "text"
           ),
           column(8,
             "B"
